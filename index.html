@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: De Meta a Google Demand Gen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white; /* Fondo blanco */
+            color: #1a202c;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .flow-card {
+            border: 2px solid #FF6F91; /* Borde rosa */
+            background-color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .flow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .flow-arrow {
+            color: #FF6F91; /* Flecha rosa */
+            font-weight: bold;
+            font-size: 2.5rem;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #FF6F91, #2D014E); /* Degradado rosa a púrpura */
+            color: white;
+        }
+        /* Estilos para el acordeón */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            overflow: hidden;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        .accordion-content.open {
+            max-height: 500px; /* Altura suficiente para el contenido */
+            padding-top: 1rem; /* 16px */
+            padding-bottom: 1rem; /* 16px */
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.open {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header con menú móvil -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-[#2D014E]">Migración Inteligente</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#proceso" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] px-3 py-2 rounded-md text-sm font-medium">El Proceso</a>
+                        <a href="#ia" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] px-3 py-2 rounded-md text-sm font-medium">Poder de la IA</a>
+                        <a href="#desafios" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] px-3 py-2 rounded-md text-sm font-medium">Desafíos</a>
+                        <a href="#planificacion" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] px-3 py-2 rounded-md text-sm font-medium">Planificación</a>
+                    </div>
+                </div>
+                <!-- Botón de menú móvil -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg id="hamburger-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg id="close-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Panel de menú móvil -->
+            <div class="hidden md:hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#proceso" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] block px-3 py-2 rounded-md text-base font-medium">El Proceso</a>
+                    <a href="#ia" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] block px-3 py-2 rounded-md text-base font-medium">Poder de la IA</a>
+                    <a href="#desafios" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] block px-3 py-2 rounded-md text-base font-medium">Desafíos</a>
+                    <a href="#planificacion" class="text-gray-600 hover:bg-[#FF6F91]/20 hover:text-[#2D014E] block px-3 py-2 rounded-md text-base font-medium">Planificación</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="py-20 bg-[#FF6F91]/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <img src="Gemini_Generated_Image_umhy7tumhy7tumhy.jpeg" alt="Logo del proyecto Janus" class="mx-auto h-24 md:h-32 w-auto">
+                <h1 class="mt-6 text-3xl md:text-5xl font-bold text-[#2D014E] max-w-4xl mx-auto">Migración Automatizada de Anuncios</h1>
+                <p class="mt-2 text-lg md:text-xl text-[#FF6F91] max-w-3xl mx-auto">De Meta a Google Demand Gen: Amplifica tu alcance y maximiza el ROI con el poder de la IA.</p>
+            </div>
+        </section>
+
+        <section id="oportunidad" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-[#2D014E]">La Oportunidad Estratégica</h2>
+                    <p class="mt-2 text-lg text-gray-600">Automatizar la migración desbloquea una eficiencia y un rendimiento sin precedentes.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="stat-card rounded-xl p-8 shadow-2xl"><p class="text-6xl font-black">90%</p><p class="mt-2 text-lg font-semibold">Reducción del tiempo <br>de migración manual</p></div>
+                    <div class="stat-card rounded-xl p-8 shadow-2xl"><p class="text-6xl font-black">3B+</p><p class="mt-2 text-lg font-semibold">Usuarios alcanzados en la red de Google (YouTube, Discover, Gmail)</p></div>
+                    <div class="stat-card rounded-xl p-8 shadow-2xl"><p class="text-6xl font-black">15x</p><p class="mt-2 text-lg font-semibold">Optimización del rendimiento <br>potenciada por IA</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proceso" class="py-16 bg-white px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12"><h2 class="text-3xl font-bold text-[#2D014E]">El Proceso de Migración en 3 Fases</h2><p class="mt-2 text-lg text-gray-600">Un flujo de trabajo automatizado desde la extracción hasta el lanzamiento.</p></div>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-8">
+                    <div class="flow-card text-center p-6 rounded-lg shadow-lg w-full md:w-1/4"><div class="text-4xl text-[#FF6F91]">1️⃣</div><h3 class="text-xl font-bold mt-4 text-[#2D014E]">Extracción</h3><p class="mt-2 text-gray-600">Obtención de creatividades, metadatos y métricas desde la API de Marketing de Meta.</p></div>
+                    <div class="flow-arrow hidden md:block">→</div><div class="flow-arrow block md:hidden transform rotate-90">↓</div>
+                    <div class="flow-card text-center p-6 rounded-lg shadow-lg w-full md:w-1/4"><div class="text-4xl text-[#FF6F91]">2️⃣</div><h3 class="text-xl font-bold mt-4 text-[#2D014E]">Transformación</h3><p class="mt-2 text-gray-600">Adaptación de activos (imágenes, vídeos, textos) a los formatos de Google Demand Gen.</p></div>
+                    <div class="flow-arrow hidden md:block">→</div><div class="flow-arrow block md:hidden transform rotate-90">↓</div>
+                    <div class="flow-card text-center p-6 rounded-lg shadow-lg w-full md:w-1/4"><div class="text-4xl text-[#FF6F91]">3️⃣</div><h3 class="text-xl font-bold mt-4 text-[#2D014E]">Lanzamiento</h3><p class="mt-2 text-gray-600">Creación y configuración automática de campañas optimizadas en Google Ads.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="fase1" class="py-16 px-4 bg-gray-50/70">
+            <div class="max-w-7xl mx-auto"><div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+                    <div><h3 class="text-3xl font-bold text-[#2D014E]">Fase 1: Extracción de Datos Clave de Meta</h3><p class="mt-4 text-lg text-gray-600">El primer paso es recopilar toda la inteligencia de la campaña de Meta...</p><ul class="mt-6 space-y-4 text-gray-600">...</ul></div>
+                    <div class="mt-10 lg:mt-0"><div class="chart-container"><canvas id="dataExtractionChart" aria-label="Gráfico de dona mostrando la distribución de datos extraídos de Meta" role="img"></canvas></div><p class="text-center mt-2 text-sm text-gray-500">Distribución de los tipos de datos extraídos desde Meta.</p></div>
+            </div></div>
+        </section>
+
+        <section id="fase2" class="py-16 bg-white px-4">
+            <div class="max-w-7xl mx-auto">
+                 <div class="text-center mb-12"><h2 class="text-3xl font-bold text-[#2D014E]">Fase 2: Transformación Inteligente de Activos</h2><p class="mt-2 text-lg text-gray-600">Aquí reside el núcleo técnico del proyecto...</p></div>
+                <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start">
+                     <div class="mb-10 lg:mb-0"><h4 class="text-xl font-semibold text-[#2D014E] mb-4">Adaptación de Límites de Texto</h4><p class="text-gray-600 mb-4">...</p><div class="chart-container" style="height: 300px;"><canvas id="textLimitsChart" aria-label="Gráfico de barras comparando límites de caracteres de texto entre Meta y Google" role="img"></canvas></div><p class="text-center mt-2 text-sm text-gray-500">...</p></div>
+                    <div><h4 class="text-xl font-semibold text-[#2D014E] mb-4">Mapeo de Activos Visuales y Textuales</h4><p class="text-gray-600 mb-4">...</p><div class="overflow-x-auto rounded-lg shadow-md"><table class="w-full text-sm text-left text-gray-500">...</table></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fase3" class="py-16 px-4 bg-gray-50/70">
+             <div class="max-w-7xl mx-auto"><div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+                    <div class="order-2 lg:order-1 mt-10 lg:mt-0"><div class="chart-container"><canvas id="biddingStrategiesChart" aria-label="Gráfico de radar comparando estrategias de puja de Google Ads" role="img"></canvas></div><p class="text-center mt-2 text-sm text-gray-500">...</p></div>
+                    <div class="order-1 lg:order-2"><h3 class="text-3xl font-bold text-[#2D014E]">Fase 3: Lanzamiento y Optimización de Campañas</h3><p class="mt-4 text-lg text-gray-600">...</p></div>
+            </div></div>
+        </section>
+        
+        <section id="ia" class="py-16 bg-white px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12"><h2 class="text-3xl font-bold text-[#2D014E]">Potenciando el Valor con Inteligencia Artificial</h2><p class="mt-2 text-lg text-gray-600">...</p></div>
+                 <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+                    <div><h3 class="text-2xl font-bold text-[#2D014E]">Áreas de Impacto de la IA</h3><p class="mt-4 text-lg text-gray-600">...</p><ul class="mt-6 space-y-4 text-gray-600">...</ul></div>
+                    <div class="mt-10 lg:mt-0"><div class="chart-container"><canvas id="aiImpactChart" aria-label="Gráfico de burbujas mostrando el impacto de la IA en varias áreas" role="img"></canvas></div><p class="text-center mt-2 text-sm text-gray-500">...</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="desafios" class="py-16 px-4 bg-gray-50/70">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12"><h2 class="text-3xl font-bold text-[#2D014E]">Anticipando Desafíos y Soluciones Robustas</h2><p class="mt-2 text-lg text-gray-600">...</p></div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden"><button class="accordion-header w-full flex justify-between items-center text-left p-6" aria-expanded="false"><h3 class="text-xl font-semibold text-[#2D014E]">🔗 Límites de Tasa y Errores de API</h3><svg class="accordion-icon w-6 h-6 text-[#2D014E]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content px-6">...</div></div>
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden"><button class="accordion-header w-full flex justify-between items-center text-left p-6" aria-expanded="false"><h3 class="text-xl font-semibold text-[#2D014E]">🖼️ Desajuste de Activos Creativos</h3><svg class="accordion-icon w-6 h-6 text-[#2D014E]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content px-6">...</div></div>
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden"><button class="accordion-header w-full flex justify-between items-center text-left p-6" aria-expanded="false"><h3 class="text-xl font-semibold text-[#2D014E]">❌ Inconsistencia o Falta de Datos</h3><svg class="accordion-icon w-6 h-6 text-[#2D014E]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content px-6">...</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nueva Sección de Planificación -->
+        <section id="planificacion" class="py-16 bg-white px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-[#2D014E]">Estimación de Tiempos del Proyecto</h2>
+                    <p class="mt-2 text-lg text-gray-600">Una cronología detallada de las fases de desarrollo, desde la investigación inicial hasta el lanzamiento.</p>
+                </div>
+                <div class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-white uppercase bg-[#2D014E]">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Fase / Tarea</th>
+                                <th scope="col" class="px-6 py-3">Fecha de Inicio</th>
+                                <th scope="col" class="px-6 py-3">Fecha de Fin</th>
+                                <th scope="col" class="px-6 py-3 text-right">Duración (Días)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Phase 0: Research & Validation</td>
+                                <td class="px-6 py-4">08/07/2025</td>
+                                <td class="px-6 py-4">11/07/2025</td>
+                                <td class="px-6 py-4 text-right">4</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Phase 1: Meta Ads Mining & Export Google Asset library</td>
+                                <td class="px-6 py-4">14/07/2025</td>
+                                <td class="px-6 py-4">30/07/2025</td>
+                                <td class="px-6 py-4 text-right">13</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">QA: Meta Ads Mining & Export Google Asset library</td>
+                                <td class="px-6 py-4">31/07/2025</td>
+                                <td class="px-6 py-4">01/08/2025</td>
+                                <td class="px-6 py-4 text-right">2</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Phase 2: Adapt and transform ad asset</td>
+                                <td class="px-6 py-4">04/08/2025</td>
+                                <td class="px-6 py-4">29/08/2025</td>
+                                <td class="px-6 py-4 text-right">20</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">QA: Adapt and transform ad asset</td>
+                                <td class="px-6 py-4">01/09/2025</td>
+                                <td class="px-6 py-4">02/09/2025</td>
+                                <td class="px-6 py-4 text-right">2</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Phase 3: Create and configure Demand Gen</td>
+                                <td class="px-6 py-4">03/09/2025</td>
+                                <td class="px-6 py-4">06/10/2025</td>
+                                <td class="px-6 py-4 text-right">24</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="px-6 py-4 font-medium text-gray-900">QA: Create and configure Demand Gen</td>
+                                <td class="px-6 py-4">07/10/2025</td>
+                                <td class="px-6 py-4">10/10/2025</td>
+                                <td class="px-6 py-4 text-right">4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#2D014E] text-white">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>Infografía generada para el proyecto de colaboración Google - Migración Automatizada de Anuncios.</p>
+            <p class="text-sm mt-2 text-white/70">© 2025. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Lógica para el menú móvil ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    mobileMenuButton.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        mobileMenu.classList.toggle('hidden');
+        hamburgerIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+    });
+    
+    // Cierra el menú móvil si se hace clic en un enlace
+    mobileMenu.addEventListener('click', (event) => {
+        if (event.target.tagName === 'A') {
+            mobileMenuButton.click();
+        }
+    });
+
+    // --- Lógica para el acordeón de Desafíos ---
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.accordion-icon');
+            const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+            header.setAttribute('aria-expanded', !isExpanded);
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        });
+    });
+
+    // --- Configuración de Gráficos (Chart.js) ---
+    const wrapLabel = (label) => {
+        if (label.length <= 16) return label;
+        const words = label.split(' ');
+        let currentLine = '';
+        const lines = [];
+        for (const word of words) {
+            if ((currentLine + ' ' + word).trim().length > 16 && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = (currentLine + ' ' + word).trim();
+            }
+        }
+        if (currentLine.length > 0) lines.push(currentLine);
+        return lines;
+    };
+    
+    const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) return label.join(' ');
+        return label;
+    };
+
+    const commonChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { labels: { color: '#1a202c', font: { family: "'Inter', sans-serif" }}},
+            tooltip: { callbacks: { title: tooltipTitleCallback }}
+        }
+    };
+
+    const dataExtractionCtx = document.getElementById('dataExtractionChart');
+    if(dataExtractionCtx) new Chart(dataExtractionCtx, {type: 'doughnut', data: {labels: ['Activos Creativos', 'Métricas de Rendimiento', 'Metadatos y Segmentación'], datasets: [{label: 'Tipos de Datos Extraídos', data: [50, 30, 20], backgroundColor: ['#FF6F91', '#2D014E', '#FFC700'], borderColor: '#FFFFFF', borderWidth: 3}]}, options: commonChartOptions});
+    
+    const textLimitsCtx = document.getElementById('textLimitsChart');
+    if(textLimitsCtx) new Chart(textLimitsCtx, {type: 'bar', data: {labels: ['Título / Encabezado', 'Cuerpo / Descripción'], datasets: [{label: 'Meta Ads', data: [255, 1024], backgroundColor: '#FF6F91'}, {label: 'Google Demand Gen', data: [40, 90], backgroundColor: '#2D014E'}]}, options: {...commonChartOptions, scales: {y: {beginAtZero: true, title: {display: true, text: 'Límite de Caracteres'}}}}});
+
+    const biddingStrategiesCtx = document.getElementById('biddingStrategiesChart');
+    if(biddingStrategiesCtx) new Chart(biddingStrategiesCtx, {type: 'radar', data: {labels: ['Objetivo Conversión', 'Objetivo Alcance', 'Control de Coste', 'Rapidez de Aprendizaje', 'Requiere Historial'].map(wrapLabel), datasets: [{label: 'Maximizar Conversiones', data: [5, 3, 2, 4, 2], fill: true, backgroundColor: 'rgba(255, 111, 145, 0.2)', borderColor: '#FF6F91', pointBackgroundColor: '#FF6F91'}, {label: 'tCPA (Coste por Adquisición)', data: [5, 2, 5, 3, 5], fill: true, backgroundColor: 'rgba(45, 1, 78, 0.2)', borderColor: '#2D014E', pointBackgroundColor: '#2D014E'}]}, options: {...commonChartOptions, scales: {r: {angleLines: {color: 'rgba(0,0,0,0.1)'}, grid: {color: 'rgba(0,0,0,0.1)'}, pointLabels: {font: {size: 11, family: "'Inter', sans-serif"}, color: '#1a202c'}, suggestedMin: 0, suggestedMax: 5}}}});
+    
+    const aiImpactCtx = document.getElementById('aiImpactChart');
+    if(aiImpactCtx) new Chart(aiImpactCtx, {type: 'bubble', data: {datasets: [{label: 'Generación Creativa', data: [{x: 70, y: 40, r: 22, label: 'Generación Creativa'}], backgroundColor: 'rgba(255, 199, 0, 0.8)', borderColor: 'rgba(255, 199, 0, 1)'}, {label: 'Modelado de Audiencias', data: [{x: 40, y: 60, r: 30, label: 'Modelado de Audiencias'}], backgroundColor: 'rgba(255, 111, 145, 0.8)', borderColor: 'rgba(255, 111, 145, 1)'},{label: 'Puja y Presupuesto', data: [{x: 80, y: 75, r: 35, label: 'Puja y Presupuesto'}], backgroundColor: 'rgba(45, 1, 78, 0.8)', borderColor: 'rgba(45, 1, 78, 1)'}]}, options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {labels: {color: '#1a202c', font: {family: "'Inter', sans-serif"}}}, tooltip: {callbacks: {label: (c) => c.dataset.label || ''}}}, scales: {y: {title: {display: true, text: 'Nivel de Complejidad Técnica'}}, x: {title: {display: true, text: 'Potencial de Valor Agregado'}}}}});
+});
+</script>
+</body>
+</html>
